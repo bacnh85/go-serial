@@ -1,5 +1,7 @@
 language: go
 
+dist: bionic
+
 os:
   - linux
   - osx
@@ -8,39 +10,36 @@ os:
 go:
   - 1.12.x
   - 1.13.x
-  - tip
-
-dist: bionic
+  - master
 
 go_import_path: github.com/albenik/go-serial/v2
 
 env:
   global:
     - GO111MODULE=on
-    - GOARM=5
     - GO386=387
+    - GOARM=5
   jobs:
-    - GOOS=linux GOARCH=386
-    - GOOS=linux GOARCH=amd64
-    - GOOS=linux GOARCH=arm
-    - GOOS=windows GOARCH=386
-    - GOOS=windows GOARCH=amd64
-    - GOOS=darwin GOARCH=386
-    - GOOS=darwin GOARCH=amd64
-    - GOOS=freebsd GOARCH=amd64
-    - GOOS=openbsd GOARCH=amd64
-    - GOOS=openbsd GOARCH=386
-    - GOOS=openbsd GOARCH=arm
+    - GIMME_OS=linux GIMME_ARCH=amd64
+    - GIMME_OS=linux GIMME_ARCH=386
+    - GIMME_OS=linux GIMME_ARCH=arm
+    - GIMME_OS=windows GIMME_ARCH=386
+    - GIMME_OS=windows GIMME_ARCH=amd64
+    - GIMME_OS=darwin GIMME_ARCH=386
+    - GIMME_OS=darwin GIMME_ARCH=amd64
+    - GIMME_OS=freebsd GIMME_ARCH=amd64
+    - GIMME_OS=openbsd GIMME_ARCH=amd64
+    - GIMME_OS=openbsd GIMME_ARCH=386
+    - GIMME_OS=openbsd GIMME_ARCH=arm
 
 matrix:
   allow_failures:
-    - env: GOOS=openbsd GOARCH=arm
+    - env: GIMME_OS=openbsd GIMME_ARCH=arm
 
 script:
   - go build -v
   - go test -c -v
   - if [[ $GOOS == "linux" && ($GOARCH == "386" || $GOARCH == "amd64") ]]; then go test -v ./...; fi
-
 
 notifications:
   email:
