@@ -20,25 +20,27 @@ env:
     - GO386=387
     - GOARM=5
   jobs:
-    - GIMME_OS=linux GIMME_ARCH=amd64
-    - GIMME_OS=linux GIMME_ARCH=386
-    - GIMME_OS=linux GIMME_ARCH=arm
-    - GIMME_OS=windows GIMME_ARCH=386
-    - GIMME_OS=windows GIMME_ARCH=amd64
-    - GIMME_OS=darwin GIMME_ARCH=386
-    - GIMME_OS=darwin GIMME_ARCH=amd64
-    - GIMME_OS=freebsd GIMME_ARCH=amd64
-    - GIMME_OS=openbsd GIMME_ARCH=amd64
-    - GIMME_OS=openbsd GIMME_ARCH=386
-    - GIMME_OS=openbsd GIMME_ARCH=arm
+    - BUILD_OS=linux BUILD_ARCH=amd64
+    - BUILD_OS=linux BUILD_ARCH=386
+    - BUILD_OS=linux BUILD_ARCH=arm
+    - BUILD_OS=windows BUILD_ARCH=386
+    - BUILD_OS=windows BUILD_ARCH=amd64
+    - BUILD_OS=darwin BUILD_ARCH=386
+    - BUILD_OS=darwin BUILD_ARCH=amd64
+    - BUILD_OS=freebsd BUILD_ARCH=amd64
+    - BUILD_OS=openbsd BUILD_ARCH=amd64
+    - BUILD_OS=openbsd BUILD_ARCH=386
+    - BUILD_OS=openbsd BUILD_ARCH=arm
 
 matrix:
   allow_failures:
-    - env: GIMME_OS=openbsd GIMME_ARCH=arm
+    - env: BUILD_OS=openbsd BUILD_ARCH=arm
 
 script:
-  - GOOS=$GOHOSTOS GOARCH=$GOHOSTARCH go test -v ./...
-  - go build -v
+  - go vet ./...
+  - go test -v ./...
+  - GOOS=$BUILD_OS GOARCH=$BUILD_ARCH go test -v -c
+  - GOOS=$BUILD_OS GOARCH=$BUILD_ARCH go build -v
 
 notifications:
   email:
