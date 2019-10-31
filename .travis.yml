@@ -17,30 +17,33 @@ go_import_path: github.com/albenik/go-serial/v2
 env:
   global:
     - GO111MODULE=on
-    - GO386=387
-    - GOARM=5
-  jobs:
-    - BUILD_OS=linux BUILD_ARCH=amd64
-    - BUILD_OS=linux BUILD_ARCH=386
-    - BUILD_OS=linux BUILD_ARCH=arm
-    - BUILD_OS=windows BUILD_ARCH=386
-    - BUILD_OS=windows BUILD_ARCH=amd64
-    - BUILD_OS=darwin BUILD_ARCH=386
-    - BUILD_OS=darwin BUILD_ARCH=amd64
-    - BUILD_OS=freebsd BUILD_ARCH=amd64
-    - BUILD_OS=openbsd BUILD_ARCH=amd64
-    - BUILD_OS=openbsd BUILD_ARCH=386
-    - BUILD_OS=openbsd BUILD_ARCH=arm
+    - BUILD_GO386=387
+    - BUILD_GOARM=5
+  matrix:
+    - BUILD_GOOS=linux BUILD_GOARCH=amd64
+    - BUILD_GOOS=linux BUILD_GOARCH=386
+    - BUILD_GOOS=linux BUILD_GOARCH=arm
+    - BUILD_GOOS=windows BUILD_GOARCH=386
+    - BUILD_GOOS=windows BUILD_GOARCH=amd64
+    - BUILD_GOOS=darwin BUILD_GOARCH=386
+    - BUILD_GOOS=darwin BUILD_GOARCH=amd64
+    - BUILD_GOOS=freebsd BUILD_GOARCH=amd64
+    - BUILD_GOOS=openbsd BUILD_GOARCH=amd64
+    - BUILD_GOOS=openbsd BUILD_GOARCH=386
+    - BUILD_GOOS=openbsd BUILD_GOARCH=arm
 
 matrix:
   allow_failures:
-    - env: BUILD_OS=openbsd BUILD_ARCH=arm
+    - env: BUILD_GOOS=openbsd BUILD_GOARCH=arm
+  exclude:
+    - os: windows
+      go: master
 
 script:
   - go vet ./...
   - go test -v ./...
-  - GOOS=$BUILD_OS GOARCH=$BUILD_ARCH go test -v -c
-  - GOOS=$BUILD_OS GOARCH=$BUILD_ARCH go build -v
+  - GOOS=$BUILD_GOOS GOARCH=$BUILD_GOARCH GO386=$BUILD_GO386 GOARM=$BUILD_GOARM go test -v -c
+  - GOOS=$BUILD_GOOS GOARCH=$BUILD_GOARCH GO386=$BUILD_GO386 GOARM=$BUILD_GOARM go build -v
 
 notifications:
   email:
