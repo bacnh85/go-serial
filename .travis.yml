@@ -37,9 +37,8 @@ matrix:
     - env: GIMME_OS=openbsd GIMME_ARCH=arm
 
 script:
+  - GOOS=$GOHOSTOS GOARCH=$GOHOSTARCH go test -v ./...
   - go build -v
-  - go test -c -v
-  - if [[ $GOOS == "linux" && ($GOARCH == "386" || $GOARCH == "amd64") ]]; then go test -v ./...; fi
 
 notifications:
   email:
